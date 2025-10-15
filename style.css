@@ -1,0 +1,9 @@
+html, body {
+  scroll-behavior: smooth;
+}
+.blob, .blob2 {
+  transition: transform 0.3s ease-out;
+}
+.parallax1, .parallax2 {
+  transition: transform 0.3s ease-out;
+}
