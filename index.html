@@ -1,281 +1,157 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Pragesh — Python Developer</title>
-  <meta name="description" content="Interactive, responsive static portfolio for a Python developer — projects, skills, contact." />
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-
-  <style>
-    :root{
-      --bg:#0f1724; --card:#0b1220; --muted:#98a2b3; --accent:#6ee7b7; --glass: rgba(255,255,255,0.04);
-      --glass-2: rgba(255,255,255,0.02);
-      --glass-3: rgba(255,255,255,0.06);
-      color-scheme: dark;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;}
-    body{
-      margin:0; font-family:Inter,system-ui,Arial; background: radial-gradient(1200px 600px at 10% 10%, rgba(110,231,183,0.05), transparent 8%), radial-gradient(900px 500px at 90% 80%, rgba(110,231,183,0.03), transparent 8%), var(--bg); color:#e6eef8; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-      cursor: none; /* hide default cursor */
-    }
-
-    /* layout */
-    .container{max-width:1100px;margin:0 auto;padding:48px 24px}
-    header{display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .brand{display:flex;gap:12px;align-items:center}
-    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#60a5fa);display:flex;align-items:center;justify-content:center;font-weight:700;color:#04202a}
-    nav{display:flex;gap:12px;align-items:center}
-    nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:8px;font-weight:600}
-    nav a:hover{color:var(--accent);background:var(--glass-3)}
-    .cta{background:linear-gradient(90deg,var(--accent),#60a5fa);color:#022; padding:8px 14px;border-radius:10px;font-weight:700;text-decoration:none}
-
-    /* hero */
-    .hero{display:grid;grid-template-columns:1fr 420px;gap:32px;align-items:center;margin-top:40px}
-    .intro h1{font-size:clamp(28px,5vw,46px);margin:0 0 10px 0;line-height:1.02}
-    .intro p{margin:0 0 18px 0;color:var(--muted);max-width:70%}
-    .kudos{display:flex;gap:10px;flex-wrap:wrap}
-    .chip{background:var(--glass);padding:8px 12px;border-radius:999px;color:var(--muted);font-weight:600}
-
-    /* card */
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:14px;padding:18px;box-shadow:0 6px 30px rgba(2,6,23,0.6);backdrop-filter: blur(6px);border:1px solid rgba(255,255,255,0.03)}
-
-    /* code-preview */
-    .mock-terminal{background:linear-gradient(180deg,#020617,#071023);padding:18px;border-radius:10px;color:#b9dfe7;font-family:JetBrains Mono,monospace;font-size:13px}
-    .term-row{display:flex;gap:10px;align-items:center;margin-bottom:8px}
-    .dot{width:10px;height:10px;border-radius:999px;background:#ff6b6b;box-shadow:0 0 10px rgba(255,107,107,0.12)}
-    .term-stdout{opacity:0.9}
-
-    /* projects */
-    .projects{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}
-    .project{padding:18px;border-radius:12px;background:linear-gradient(180deg,var(--glass),transparent);cursor:pointer;transition:transform .2s ease, box-shadow .2s ease}
-    .project:hover{transform:translateY(-6px);box-shadow:0 12px 40px rgba(2,6,23,0.6)}
-    .project h3{margin:0 0 6px 0}
-    .project p{margin:0;color:var(--muted);font-size:14px}
-
-    /* skills */
-    .skills{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
-    .skill{background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);padding:10px 12px;border-radius:10px;font-weight:700;color:var(--muted)}
-
-    /* contact */
-    footer{margin-top:48px;padding:28px 0;display:flex;justify-content:space-between;align-items:center}
-
-    /* responsive */
-    @media (max-width:980px){
-      .hero{grid-template-columns:1fr;}
-      .projects{grid-template-columns:repeat(2,1fr)}
-      .intro p{max-width:100%}
-    }
-    @media (max-width:640px){
-      .projects{grid-template-columns:1fr}
-      header{flex-direction:column;align-items:flex-start}
-      nav{width:100%;display:flex;overflow:auto}
-    }
-
-    .reveal{opacity:0;transform:translateY(10px);transition:opacity .6s ease, transform .6s ease}
-    .reveal.visible{opacity:1;transform:none}
-
-    /* modal */
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:24px}
-    .modal.show{display:flex}
-    .modal-card{width:100%;max-width:960px;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.2));padding:18px;border-radius:14px}
-    .close-btn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px;color:var(--muted)}
-
-    /* particle background */
-    .bg-canvas{position:fixed;inset:0;pointer-events:none;opacity:0.25;z-index:0}
-
-    /* custom animated cursor trail */
-    .cursor-trail {
-      position: fixed;
-      top: 0; left: 0;
-      width: 12px; height: 12px;
-      border-radius: 50%;
-      pointer-events: none;
-      background: radial-gradient(circle, var(--accent), transparent 70%);
-      mix-blend-mode: lighten;
-      opacity: 0.7;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pragesh — Artistic Developer Portfolio</title>
+  <meta name="description" content="Interactive artistic portfolio with parallax animations and smooth gradients." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <canvas id="c" class="bg-canvas"></canvas>
+<body class="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#081028] to-[#061426] text-slate-100 font-[Inter] overflow-x-hidden">
 
-  <!-- cursor trail circles -->
-  <div id="cursor"></div>
-
-  <div class="container">
-    <!-- HEADER -->
-    <header>
-      <div class="brand">
-        <div class="logo">Py</div>
-        <div>
-          <div style="font-weight:700">Pragesh</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px">Python Developer • Backend • Automation</div>
-        </div>
-      </div>
-
-      <nav>
-        <a href="#projects">Projects</a>
-        <a href="#skills">Skills</a>
-        <a href="#about">About</a>
-        <a href="#contact" class="cta">Hire me</a>
-      </nav>
-    </header>
-
-    <!-- MAIN -->
-    <main>
-      <section class="hero">
-        <div>
-          <div class="intro">
-            <h1 class="reveal">I build reliable Python systems — APIs, automation & data tools.</h1>
-            <p class="reveal">I design backend systems and developer tools that scale — REST & GraphQL APIs, asyncio services, reliable ETL, and data pipelines. I enjoy turning complex problems into simple, testable code.</p>
-
-            <div class="kudos reveal">
-              <div class="chip">FastAPI • Async</div>
-              <div class="chip">PostgreSQL • SQLAlchemy</div>
-              <div class="chip">Docker • GitHub Actions</div>
-              <div class="chip">Testing • CI/CD</div>
-            </div>
-
-            <div style="margin-top:18px" class="reveal">
-              <a class="cta" href="#projects">View Projects</a>
-              <a style="margin-left:12px;color:var(--muted);font-weight:700;text-decoration:none" href="#contact">Contact</a>
-            </div>
-          </div>
-
-          <div class="card" style="margin-top:22px;max-width:680px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-              <div style="font-weight:800">Live Preview</div>
-              <div style="font-size:13px;color:var(--muted)">Python • FastAPI • Docker</div>
-            </div>
-            <div class="mock-terminal">
-              <div class="term-row"><div class="dot"></div><div class="term-stdout">$ git clone github.com/yourname/awesome-api</div></div>
-              <div class="term-row"><div style="width:10px;height:10px;border-radius:999px;background:#ffcc4d"></div><div class="term-stdout">$ cd awesome-api && docker compose up --build</div></div>
-              <div class="term-row"><div style="width:10px;height:10px;border-radius:999px;background:#4ee07a"></div><div class="term-stdout">🚀 Server running at http://localhost:8000/docs</div></div>
-            </div>
-          </div>
-        </div>
-
-        <aside>
-          <div class="card" style="display:flex;flex-direction:column;gap:12px;align-items:flex-start">
-            <div style="display:flex;justify-content:space-between;width:100%"><div style="font-weight:800">Stats</div><div style="color:var(--muted);font-weight:700">Updated</div></div>
-            <div style="display:flex;gap:12px;flex-wrap:wrap;width:100%">
-              <div style="min-width:120px;padding:10px;border-radius:10px;background:var(--glass-2)"><div style="font-weight:800;font-size:20px">24</div><div style="font-size:13px;color:var(--muted)">Projects</div></div>
-              <div style="min-width:120px;padding:10px;border-radius:10px;background:var(--glass-2)"><div style="font-weight:800;font-size:20px">6</div><div style="font-size:13px;color:var(--muted)">Open-source</div></div>
-              <div style="min-width:120px;padding:10px;border-radius:10px;background:var(--glass-2)"><div style="font-weight:800;font-size:20px">4.9s</div><div style="font-size:13px;color:var(--muted)">Avg Response</div></div>
-            </div>
-
-            <div style="width:100%">
-              <div style="font-weight:700;margin-top:8px">Quick contact</div>
-              <a href="mailto:you@example.com" style="display:inline-block;margin-top:8px;padding:10px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),#60a5fa);color:#022;font-weight:700;text-decoration:none">you@example.com</a>
-            </div>
-          </div>
-        </aside>
-      </section>
-
-      <!-- (projects, skills, about, contact sections unchanged from before) -->
-      <!-- ... existing sections stay same ... -->
-
-    </main>
-
-    <footer>
-      <div style="color:var(--muted)">© Pragesh • Built with ❤️ and Python</div>
-      <div style="color:var(--muted)">Designed for readability • Responsive</div>
-    </footer>
-  </div>
-
-  <!-- modal -->
-  <div id="modal" class="modal" onclick="closeModal(event)">
-    <div class="modal-card card" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <h3 id="modal-title" style="margin:0">Project</h3>
-          <div id="modal-tech" style="color:var(--muted);font-size:13px;margin-top:6px">Tech</div>
-        </div>
-        <button class="close-btn" onclick="closeModal(event)">Close</button>
-      </div>
-      <div id="modal-desc" style="margin-top:12px;color:var(--muted)"></div>
-      <div style="margin-top:14px;display:flex;gap:8px">
-        <a id="modal-demo" class="cta" href="#">Live</a>
-        <a id="modal-code" style="padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);text-decoration:none;color:var(--muted);font-weight:700" href="#">Source</a>
+  <!-- HEADER -->
+  <header class="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center font-semibold text-xl">P</div>
+      <div class="hidden md:block">
+        <div class="font-medium">Pragesh</div>
+        <div class="text-xs text-slate-400">Python / Web / Creative dev</div>
       </div>
     </div>
-  </div>
+    <nav class="flex gap-4 items-center text-sm">
+      <a href="#work" class="text-slate-300 hover:text-white">Work</a>
+      <a href="#about" class="text-slate-300 hover:text-white">About</a>
+      <a href="#contact" class="text-slate-300 hover:text-white">Contact</a>
+      <button class="ml-4 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20">Resume</button>
+    </nav>
+  </header>
 
-  <script>
-    // reveal on scroll
-    const revealEls = document.querySelectorAll('.reveal');
-    const io = new IntersectionObserver((entries)=>{
-      for(const e of entries) if(e.isIntersecting) e.target.classList.add('visible');
-    },{threshold:0.08});
-    revealEls.forEach(el=>io.observe(el));
+  <!-- HERO -->
+  <section id="hero" class="relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none">
+      <!-- Blob 1 -->
+      <svg class="absolute left-[-10%] top-[-10%] w-[70%] opacity-30 blob" viewBox="0 0 600 600" fill="none">
+        <defs>
+          <linearGradient id="grad1" x1="0" x2="1">
+            <stop offset="0%" stop-color="#4f46e5" />
+            <stop offset="100%" stop-color="#06b6d4" />
+          </linearGradient>
+        </defs>
+        <path d="M300 0C370 0 420 50 480 90C540 130 600 170 600 250C600 330 540 420 480 480C420 540 330 600 250 600C170 600 70 540 20 480C-30 420 -10 300 20 230C50 160 230 0 300 0Z" fill="url(#grad1)" />
+      </svg>
 
-    // modal
-    function openModal(el){
-      const m = document.getElementById('modal');
-      document.getElementById('modal-title').innerText = el.dataset.title;
-      document.getElementById('modal-desc').innerText = el.dataset.desc;
-      document.getElementById('modal-tech').innerText = el.dataset.tech;
-      m.classList.add('show');
-    }
-    function closeModal(){document.getElementById('modal').classList.remove('show');}
+      <!-- Blob 2 -->
+      <svg class="absolute right-[-5%] bottom-[-5%] w-[50%] opacity-20 blob2" viewBox="0 0 600 600">
+        <defs>
+          <linearGradient id="grad2" x1="0" x2="1">
+            <stop offset="0%" stop-color="#fb7185" />
+            <stop offset="100%" stop-color="#f97316" />
+          </linearGradient>
+        </defs>
+        <circle cx="300" cy="300" r="250" fill="url(#grad2)" />
+      </svg>
+    </div>
 
-    // contact form
-    function contactSubmit(e){
-      e.preventDefault();
-      const el = e.target;
-      const name = el.name.value;
-      el.querySelector('button').innerText = 'Sent ✓';
-      setTimeout(()=>{ el.reset(); el.querySelector('button').innerText = 'Send'; },2000);
-      alert('Thanks '+name+'. This demo form does not send email.');
-    }
+    <div class="max-w-6xl mx-auto px-6 py-24 lg:py-36 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+      <div>
+        <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">Artistic developer
+          <span class="block text-lg mt-4 font-medium text-slate-300">Crafting code with color, motion, & intention.</span>
+        </h1>
+        <p class="mt-6 text-slate-300 max-w-xl">
+          I build interactive web experiences, data tools, and creative code. This site blends modern design and playful interactivity.
+        </p>
+        <div class="mt-8 flex gap-3">
+          <a href="#work" class="px-4 py-2 rounded-lg bg-gradient-to-r from-violet-500 to-cyan-400 font-medium shadow-lg">See my work</a>
+          <a href="#contact" class="px-4 py-2 rounded-lg border border-white/10">Get in touch</a>
+        </div>
+        <div class="mt-8 flex gap-4 text-sm text-slate-400">
+          <div>Location: Kathmandu</div>
+          <div>•</div>
+          <div>Open to freelance</div>
+        </div>
+      </div>
 
-    // subtle background particles
-    const canvas = document.getElementById('c');
-    const ctx = canvas.getContext('2d');
-    let W, H, parts = [];
-    function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;}
-    addEventListener('resize',resize);resize();
-    for(let i=0;i<60;i++){parts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*2+0.5,vx:(Math.random()-0.5)/2,vy:(Math.random()-0.5)/2})}
-    function tick(){ctx.clearRect(0,0,W,H);for(const p of parts){p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.28);ctx.fillStyle='rgba(110,231,183,0.06)';ctx.fill();}requestAnimationFrame(tick)}
-    tick();
+      <!-- Demo Box -->
+      <div class="flex justify-center lg:justify-end">
+        <div class="w-[360px] h-[220px] rounded-2xl bg-gradient-to-br from-white/5 to-white/3 border border-white/6 p-4 shadow-2xl relative overflow-hidden">
+          <div class="absolute left-6 top-6 w-24 h-24 rounded-lg blur-[40px] opacity-60 bg-gradient-to-tr from-[#a78bfa] to-[#06b6d4] parallax1"></div>
+          <div class="absolute right-6 bottom-8 w-20 h-20 rounded-lg blur-[30px] opacity-50 bg-gradient-to-tr from-[#fb7185] to-[#f97316] parallax2"></div>
+          <div class="relative z-10 w-full h-full rounded-xl overflow-hidden bg-gradient-to-b from-white/6 to-transparent p-3">
+            <div class="text-xs text-slate-400 text-right">Preview</div>
+            <div class="mt-4 flex items-center gap-3">
+              <div class="w-12 h-12 rounded-lg bg-white/6 flex items-center justify-center">JS</div>
+              <div>
+                <div class="font-semibold">Interactive map</div>
+                <div class="text-xs text-slate-400">Web demo • motion</div>
+              </div>
+            </div>
+            <div class="mt-6 grid grid-cols-2 gap-2">
+              <div class="h-8 rounded bg-white/4"></div>
+              <div class="h-8 rounded bg-white/4"></div>
+              <div class="h-8 rounded bg-white/4 col-span-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    // animated glowing cursor trail
-    const numTrails = 12;
-    const trails = [];
-    for(let i=0;i<numTrails;i++){
-      const t = document.createElement('div');
-      t.classList.add('cursor-trail');
-      document.body.appendChild(t);
-      trails.push({el:t, x:0, y:0});
-    }
+  <!-- WORK -->
+  <section id="work" class="max-w-6xl mx-auto px-6 py-20">
+    <h2 class="text-2xl font-bold">Selected projects</h2>
+    <p class="text-slate-400 mt-2 max-w-2xl">Interactive frontends, data tools, and creative experiments.</p>
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="group block rounded-2xl overflow-hidden border border-white/6 bg-white/3 p-4 hover:-translate-y-1 transition-transform">
+        <div class="w-full h-40 rounded-lg overflow-hidden bg-gradient-to-br from-white/5 to-white/6 flex items-center justify-center text-slate-400">Project 1</div>
+      </div>
+      <div class="group block rounded-2xl overflow-hidden border border-white/6 bg-white/3 p-4 hover:-translate-y-1 transition-transform">
+        <div class="w-full h-40 rounded-lg overflow-hidden bg-gradient-to-br from-white/5 to-white/6 flex items-center justify-center text-slate-400">Project 2</div>
+      </div>
+      <div class="group block rounded-2xl overflow-hidden border border-white/6 bg-white/3 p-4 hover:-translate-y-1 transition-transform">
+        <div class="w-full h-40 rounded-lg overflow-hidden bg-gradient-to-br from-white/5 to-white/6 flex items-center justify-center text-slate-400">Project 3</div>
+      </div>
+    </div>
+  </section>
 
-    let mouseX=0, mouseY=0;
-    window.addEventListener('mousemove',e=>{
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
+  <!-- ABOUT -->
+  <section id="about" class="max-w-4xl mx-auto px-6 py-20">
+    <div class="bg-white/3 rounded-2xl p-8 border border-white/6">
+      <h3 class="text-xl font-bold">About me</h3>
+      <p class="text-slate-300 mt-4">
+        I'm a developer who loves combining data and design. I build tools that feel alive — maps, realtime apps, and playful UIs.
+      </p>
+      <div class="mt-6 grid grid-cols-2 gap-4 text-sm text-slate-300">
+        <div>
+          <div class="text-slate-400 text-xs">Skills</div>
+          <div class="mt-2">Python · JavaScript · React · FastAPI · Postgres</div>
+        </div>
+        <div>
+          <div class="text-slate-400 text-xs">Tools</div>
+          <div class="mt-2">Tailwind · Motion · OSM · Docker · Git</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    function animateCursor(){
-      let x = mouseX, y = mouseY;
-      trails.forEach((t,i)=>{
-        t.x += (x - t.x) * 0.15;
-        t.y += (y - t.y) * 0.15;
-        const scale = 1 - i / numTrails;
-        const opacity = 0.4 * scale;
-        t.el.style.transform = `translate(${t.x}px, ${t.y}px) scale(${scale})`;
-        t.el.style.opacity = opacity.toFixed(2);
-      });
-      requestAnimationFrame(animateCursor);
-    }
-    animateCursor();
+  <!-- CONTACT -->
+  <footer id="contact" class="max-w-6xl mx-auto px-6 py-16">
+    <div class="bg-gradient-to-br from-white/3 to-transparent border border-white/6 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div>
+        <div class="font-bold text-lg">Work with me</div>
+        <div class="text-slate-300 mt-2">Available for freelance and collaborations.</div>
+      </div>
+      <div class="flex gap-3">
+        <a class="px-4 py-2 rounded-lg bg-gradient-to-r from-violet-500 to-cyan-400" href="mailto:hello@example.com">Email</a>
+        <a class="px-4 py-2 rounded-lg border border-white/10" href="#">Say hi</a>
+      </div>
+    </div>
+    <div class="mt-8 text-slate-500 text-sm text-center">© 2025 Pragesh — crafted with code.</div>
+  </footer>
 
-    document.addEventListener('keydown',e=>{if(e.key==='Escape') closeModal();});
-  </script>
+  <div class="fixed right-6 bottom-6 text-xs text-slate-400 bg-white/3 border border-white/6 px-3 py-2 rounded-lg">Move your mouse</div>
+
+  <script src="script.js"></script>
 </body>
 </html>
